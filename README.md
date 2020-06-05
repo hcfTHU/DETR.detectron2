@@ -1,5 +1,5 @@
 # DETR implementation based on Detectron2.
-
+For more detailes, please find DETR at projects/DETR: https://github.com/poodarchu/DETR.detectron2/blob/master/projects/DETR/RAEDME.md
 
 <img src=".github/Detectron2-Logo-Horz.svg" width="300" >
 
