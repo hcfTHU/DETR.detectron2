@@ -14,6 +14,7 @@ from util.misc import (
 from detectron2.layers import ShapeSpec
 from detectron2.structures import ImageList
 from detectron2.structures import Boxes, Instances
+from detectron2.modeling.backbone import build_backbone
 from detectron2.modeling.meta_arch.build import META_ARCH_REGISTRY
 
 
@@ -30,9 +31,8 @@ class DETR(nn.Module):
         self.device = torch.device(cfg.MODEL.DEVICE)
 
         # Build backbone
-        self.backbone = cfg.build_backbone(
-            cfg, input_shape=ShapeSpec(channels=len(cfg.MODEL.PIXEL_MEAN)))
-
+        # build the backbone
+        self.backbone = build_backbone(cfg)
         self.transformer = Transformer(cfg)
 
         self.aux_loss = not cfg.MODEL.DETR.NO_AUX_LOSS
