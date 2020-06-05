@@ -442,6 +442,38 @@ _C.MODEL.RETINANET.SMOOTH_L1_LOSS_BETA = 0.1
 
 
 # ---------------------------------------------------------------------------- #
+# DETR
+# ---------------------------------------------------------------------------- #
+_C.MODEL.DETR = CN()
+
+# Transformer configs
+_C.MODEL.DETR.TRANSFORMER = CN()
+_C.MODEL.DETR.TRANSFORMER.D_MODEL=256,
+_C.MODEL.DETR.TRANSFORMER.N_HEAD=8,
+_C.MODEL.DETR.TRANSFORMER.NUM_ENC_LAYERS=6,
+_C.MODEL.DETR.TRANSFORMER.NUM_DEC_LAYERS=6,
+_C.MODEL.DETR.TRANSFORMER.DIM_FFN=2048,
+_C.MODEL.DETR.TRANSFORMER.DROPOUT_RATE=0.1,
+_C.MODEL.DETR.TRANSFORMER.ACTIVATION="relu",
+_C.MODEL.DETR.TRANSFORMER.PRE_NORM=False,
+_C.MODEL.DETR.TRANSFORMER.RETURN_INTERMEDIATE_DEC=True,
+
+# Head configs
+_C.MODEL.DETR.POSITION_EMBEDDING = "sine"
+_C.MODEL.DETR.NUM_QUERIES=100,
+_C.MODEL.DETR.NO_AUX_LOSS=False,
+_C.MODEL.DETR.COST_CLASS=1.0,
+_C.MODEL.DETR.COST_BBOX=5.0,
+_C.MODEL.DETR.COST_GIOU=2.0,
+_C.MODEL.DETR.MASK_LOSS_COEFF=1.0,
+_C.MODEL.DETR.DICE_LOSS_COEFF=1.0,
+_C.MODEL.DETR.BBOX_LOSS_COEFF=5.0,
+_C.MODEL.DETR.GIOU_LOSS_COEFF=2.0,
+_C.MODEL.DETR.EOS_COEFF=0.1,  # Relative classification weight of the no-object class
+_C.MODEL.DETR.NUM_CLASSES=80,  # For COCO
+
+
+# ---------------------------------------------------------------------------- #
 # ResNe[X]t options (ResNets = {ResNet, ResNeXt}
 # Note that parts of a resnet may be used for both the backbone and the head
 # These options apply to both
@@ -487,6 +519,8 @@ _C.MODEL.RESNETS.DEFORM_NUM_GROUPS = 1
 # Solver
 # ---------------------------------------------------------------------------- #
 _C.SOLVER = CN()
+
+_C.SOLVER.OPTIMIZER_NAME = "SGD"
 
 # See detectron2/solver/build.py for LR scheduler options
 _C.SOLVER.LR_SCHEDULER_NAME = "WarmupMultiStepLR"

@@ -1,6 +1,7 @@
 # Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved
 from enum import Enum
 from typing import Any, Callable, Dict, Iterable, List, Set, Type, Union
+
 import torch
 
 from detectron2.config import CfgNode
@@ -130,9 +131,28 @@ def build_optimizer(cfg: CfgNode, model: torch.nn.Module) -> torch.optim.Optimiz
                 weight_decay = cfg.SOLVER.WEIGHT_DECAY_BIAS
             params += [{"params": [value], "lr": lr, "weight_decay": weight_decay}]
 
-    optimizer = torch.optim.SGD(
-        params, cfg.SOLVER.BASE_LR, momentum=cfg.SOLVER.MOMENTUM, nesterov=cfg.SOLVER.NESTEROV
-    )
+    if cfg.SOLVER.OPTIMIZER_NAME == "SGD":
+        optimizer = torch.optim.SGD(
+            params, cfg.SOLVER.BASE_LR, momentum=cfg.SOLVER.MOMENTUM, nesterov=cfg.SOLVER.NESTEROV
+        )
+    elif cfg.SOLVER.OPTIMIZER_NAME == "AdamW":
+        # Only used for DETR now.
+        lr = cfg.SOLVER.BASE_LR
+        param_dicts = [
+            {
+                "params": [param for name, param in model.named_parameters() if "backbone" not in name and param.requires_grad],
+            },
+            {
+                "params": [param for name, param in model.named_parameters() if "backbone" in name and param.requires_grad],
+                "lr": cfg.SOLVER.BASE_LR_BACKBONE,
+            }
+        ]
+        optimizer = torch.optim.AdamW(
+            param_dicts,
+            lr=lr,
+            weight_decay=cfg.SOLVER.WEIGHT_DECAY,
+        )
+
     optimizer = maybe_add_gradient_clipping(cfg, optimizer)
     return optimizer
 
