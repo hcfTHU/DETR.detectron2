@@ -18,15 +18,15 @@ class Transformer(nn.Module):
     def __init__(self, cfg):
         super(Transformer, self).__init__()
 
-        d_model = cfg.MODEL.TRANSFORMER.get("D_MODEL", 512)
-        nhead = cfg.MODEL.TRANSFORMER.get("N_HEAD", 8)
-        num_encoder_layers = cfg.MODEL.TRANSFORMER.get("NUM_ENC_LAYERS", 6)
-        num_decoder_layers = cfg.MODEL.TRANSFORMER.get("NUM_DEC_LAYERS", 6)
-        dim_feedforward = cfg.MODEL.TRANSFORMER.get("DIM_FFN", 2048)
-        dropout = cfg.MODEL.TRANSFORMER.get("DROPOUT_RATE", 0.1)
-        activation = cfg.MODEL.TRANSFORMER.get("ACTIVATION", "relu")
-        normalize_before = cfg.MODEL.TRANSFORMER.get("PRE_NORM", False)
-        return_intermediate_dec = cfg.MODEL.TRANSFORMER.get("RETURN_INTERMEDIATE_DEC", False)
+        d_model = cfg.MODEL.DETR.TRANSFORMER.get("D_MODEL", 512)
+        nhead = cfg.MODEL.DETR.TRANSFORMER.get("N_HEAD", 8)
+        num_encoder_layers = cfg.MODEL.DETR.TRANSFORMER.get("NUM_ENC_LAYERS", 6)
+        num_decoder_layers = cfg.MODEL.DETR.TRANSFORMER.get("NUM_DEC_LAYERS", 6)
+        dim_feedforward = cfg.MODEL.DETR.TRANSFORMER.get("DIM_FFN", 2048)
+        dropout = cfg.MODEL.DETR.TRANSFORMER.get("DROPOUT_RATE", 0.1)
+        activation = cfg.MODEL.DETR.TRANSFORMER.get("ACTIVATION", "relu")
+        normalize_before = cfg.MODEL.DETR.TRANSFORMER.get("PRE_NORM", False)
+        return_intermediate_dec = cfg.MODEL.DETR.TRANSFORMER.get("RETURN_INTERMEDIATE_DEC", False)
 
         encoder_layer = TransformerEncoderLayer(d_model, nhead, dim_feedforward,
                                                 dropout, activation, normalize_before)
