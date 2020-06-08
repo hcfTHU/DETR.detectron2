@@ -32,16 +32,9 @@ class DETR(nn.Module):
 
         self.device = torch.device(cfg.MODEL.DEVICE)
 
-        # Build backbone
-        # self.backbone = build_backbone(cfg)  # msra weights cannot converge for unknown reasons
-        self.backbone =  IntermediateLayerGetter(
-            getattr(torchvision.models, "resnet50")(
-            replace_stride_with_dilation=[False, False, False],
-            pretrained=True, norm_layer=FrozenBatchNorm2d),
-            return_layers={"layer4": "res5"}
-        )
-        self.backbone.size_divisibility = 32        
-        
+        # Build Backbone
+        self.backbone = build_backbone(cfg)  # msra weights cannot converge for unknown reasons      
+        # Build Transformer
         self.transformer = Transformer(cfg)
 
         self.aux_loss = not cfg.MODEL.DETR.NO_AUX_LOSS
@@ -49,14 +42,14 @@ class DETR(nn.Module):
         self.num_queries = cfg.MODEL.DETR.NUM_QUERIES
         hidden_dim = self.transformer.d_model
 
+        # Build FFN
         self.class_embed = nn.Linear(hidden_dim, self.num_classes + 1)
         self.bbox_embed = MLP(hidden_dim, hidden_dim, 4, 3)
+        # Build Object Queries
         self.query_embed = nn.Embedding(self.num_queries, hidden_dim)
 
-        # backbone_out_shapes = self.backbone.output_shape()["res5"]
-        # self.input_proj = nn.Conv2d(backbone_out_shapes.channels, hidden_dim, kernel_size=1)
-        backbone_out_shapes = 2048
-        self.input_proj = nn.Conv2d(backbone_out_shapes, hidden_dim, kernel_size=1)
+        backbone_out_shapes = self.backbone.output_shape()["res5"]
+        self.input_proj = nn.Conv2d(backbone_out_shapes.channels, hidden_dim, kernel_size=1)
 
         self.position_embedding = position_embedding[cfg.MODEL.DETR.POSITION_EMBEDDING](
             num_pos_feats=hidden_dim // 2,
@@ -95,7 +88,7 @@ class DETR(nn.Module):
 
         pixel_mean = torch.Tensor(cfg.MODEL.PIXEL_MEAN).to(self.device).view(3, 1, 1)
         pixel_std = torch.Tensor(cfg.MODEL.PIXEL_STD).to(self.device).view(3, 1, 1)
-        self.normalizer = lambda x: (x / 255.0 - pixel_mean) / pixel_std
+        self.normalizer = lambda x: (x - pixel_mean) / pixel_std
 
         self.to(self.device)
 
