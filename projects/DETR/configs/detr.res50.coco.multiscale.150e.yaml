@@ -1,5 +1,6 @@
 MODEL:
   META_ARCHITECTURE: "DETR"
+  # WEIGHTS: ""  # There're problems with MSRA weights, so using weights from torchvision instead
   BACKBONE:
     NAME: "build_resnet_backbone"
     FREEZE_AT: 0
@@ -34,11 +35,11 @@ DATASETS:
   TEST: ("coco_2017_val",)
 SOLVER:
   OPTIMIZER_NAME: "AdamW"
-  IMS_PER_BATCH: 64  # 8 GPUs
+  IMS_PER_BATCH: 32  # 8 GPUs
   BASE_LR: 0.0001  # Note that RetinaNet uses a different default learning rate
   BASE_LR_BACKBONE: 0.00001
-  STEPS: (183250,) # 
-  MAX_ITER: 274875  # 150 epoch using batch size 64
+  STEPS: (366500,) # 
+  MAX_ITER: 549750  # 150 epoch using batch size 32
   CLIP_GRADIENTS:
     ENABLED: True
     CLIP_TYPE: "norm"
