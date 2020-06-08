@@ -2,7 +2,6 @@ MODEL:
   META_ARCHITECTURE: "DETR"
   BACKBONE:
     NAME: "build_resnet_backbone"
-    FREEZE_AT: 0
   RESNETS:
     DEPTH: 50
     OUT_FEATURES: ["res5"]
