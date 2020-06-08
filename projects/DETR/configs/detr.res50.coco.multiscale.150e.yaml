@@ -1,6 +1,5 @@
 MODEL:
   META_ARCHITECTURE: "DETR"
-  # WEIGHTS: ""  # There're problems with MSRA weights, so using weights from torchvision instead
   BACKBONE:
     NAME: "build_resnet_backbone"
     FREEZE_AT: 0
