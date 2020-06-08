@@ -3,13 +3,10 @@ DETR model and criterion classes.
 """
 import torch
 import torch.nn.functional as F
-from torch import nn
+import torchvision
 
-from util import box_ops
-from util.misc import (
-    accuracy,
-    get_world_size,
-    is_dist_avail_and_initialized)
+from torch import nn
+from torchvision.models._utils import IntermediateLayerGetter
 
 from detectron2.layers import ShapeSpec
 from detectron2.structures import ImageList
@@ -17,10 +14,15 @@ from detectron2.structures import Boxes, Instances
 from detectron2.modeling.backbone import build_backbone
 from detectron2.modeling.meta_arch.build import META_ARCH_REGISTRY
 
-
 from transformer import Transformer
 from matcher import HungarianMatcher
 from position_encoding import position_embedding
+
+from util import box_ops
+from util.misc import (
+    accuracy,
+    get_world_size,
+    is_dist_avail_and_initialized)
 
 
 @META_ARCH_REGISTRY.register()
@@ -31,8 +33,15 @@ class DETR(nn.Module):
         self.device = torch.device(cfg.MODEL.DEVICE)
 
         # Build backbone
-        # build the backbone
-        self.backbone = build_backbone(cfg)
+        # self.backbone = build_backbone(cfg)  # msra weights cannot converge for unknown reasons
+        self.backbone =  IntermediateLayerGetter(
+            getattr(torchvision.models, "resnet50")(
+            replace_stride_with_dilation=[False, False, False],
+            pretrained=True, norm_layer=FrozenBatchNorm2d),
+            return_layers={"layer4": "res5"}
+        )
+        self.backbone.size_divisibility = 32        
+        
         self.transformer = Transformer(cfg)
 
         self.aux_loss = not cfg.MODEL.DETR.NO_AUX_LOSS
@@ -44,8 +53,10 @@ class DETR(nn.Module):
         self.bbox_embed = MLP(hidden_dim, hidden_dim, 4, 3)
         self.query_embed = nn.Embedding(self.num_queries, hidden_dim)
 
-        backbone_out_shapes = self.backbone.output_shape()["res5"]
-        self.input_proj = nn.Conv2d(backbone_out_shapes.channels, hidden_dim, kernel_size=1)
+        # backbone_out_shapes = self.backbone.output_shape()["res5"]
+        # self.input_proj = nn.Conv2d(backbone_out_shapes.channels, hidden_dim, kernel_size=1)
+        backbone_out_shapes = 2048
+        self.input_proj = nn.Conv2d(backbone_out_shapes, hidden_dim, kernel_size=1)
 
         self.position_embedding = position_embedding[cfg.MODEL.DETR.POSITION_EMBEDDING](
             num_pos_feats=hidden_dim // 2,
