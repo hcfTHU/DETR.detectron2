@@ -35,6 +35,8 @@ from detectron2.evaluation import (CityscapesInstanceEvaluator,
                                    SemSegEvaluator, verify_results)
 from detectron2.modeling import GeneralizedRCNNWithTTA
 
+from detr import DETR
+
 
 class Trainer(DefaultTrainer):
     """
