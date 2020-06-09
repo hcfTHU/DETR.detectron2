@@ -95,8 +95,6 @@ class DETR(nn.Module):
     def forward(self, batched_inputs):
         images = self.preprocess_image(batched_inputs)
 
-        targets = self.convert_anno_format(batched_inputs)
-
         B, C, H, W = images.tensor.shape
         device = images.tensor.device
 
@@ -115,6 +113,9 @@ class DETR(nn.Module):
         out = {'pred_logits': outputs_class[-1], 'pred_boxes': outputs_coord[-1]}
 
         if self.training:
+            
+            targets = self.convert_anno_format(batched_inputs)
+
             if self.aux_loss:
                 out['aux_outputs'] = [{'pred_logits': a, 'pred_boxes': b}
                                       for a, b in zip(outputs_class[:-1], outputs_coord[:-1])]
