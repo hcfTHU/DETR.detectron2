@@ -33,7 +33,7 @@ class DETR(nn.Module):
         self.device = torch.device(cfg.MODEL.DEVICE)
 
         # Build Backbone
-        self.backbone = build_backbone(cfg)  # msra weights cannot converge for unknown reasons      
+        self.backbone = build_backbone(cfg)      
         # Build Transformer
         self.transformer = Transformer(cfg)
 
