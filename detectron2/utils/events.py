@@ -210,21 +210,35 @@ class CommonMetricPrinter(EventWriter):
             max_mem_mb = None
 
         # NOTE: max_mem is parsed by grep in "dev/parse_results.sh"
+        losses = "  ".join(
+            [
+                "{}: {:.3f}".format(k, v.median(20))
+                for k, v in storage.histories().items()
+                if "loss" in k
+            ]
+        )
+        other_metrics = "  ".join(
+            [
+                "{}: {:.3f}".format(k, v.median(20))
+                for k, v in storage.histories().items()
+                if "loss" not in k and k not in ["data_time", "time", "lr"] and "/" not in k
+            ]
+        )
         self.logger.info(
-            " {eta}iter: {iter}  {losses}  {time}{data_time}lr: {lr}  {memory}".format(
-                eta=f"eta: {eta_string}  " if eta_string else "",
-                iter=iteration,
-                losses="  ".join(
-                    [
-                        "{}: {:.3f}".format(k, v.median(20))
-                        for k, v in storage.histories().items()
-                        if "loss" in k
-                    ]
-                ),
-                time="time: {:.4f}  ".format(iter_time) if iter_time is not None else "",
-                data_time="data_time: {:.4f}  ".format(data_time) if data_time is not None else "",
+            ("eta: {eta}  iter: {iter}/{max_iter}  {losses}  {other_metrics}  "
+             "{data_time}  lr: {lr}  {memory}").format(
+                eta=eta_string,
+                iter=iteration + 1,
+                max_iter=self._max_iter,
+                losses=losses,
+                other_metrics=other_metrics,
+                data_time="data_time: {:.4f}".format(data_time)
+                if data_time is not None
+                else "",
                 lr=lr,
-                memory="max_mem: {:.0f}M".format(max_mem_mb) if max_mem_mb is not None else "",
+                memory="max_mem: {:.0f}M".format(max_mem_mb)
+                if max_mem_mb is not None
+                else "",
             )
         )
 
