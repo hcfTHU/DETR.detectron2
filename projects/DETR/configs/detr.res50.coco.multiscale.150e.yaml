@@ -1,5 +1,6 @@
 MODEL:
   META_ARCHITECTURE: "DETR"
+  WEIGHTS: "detectron2://ImageNetPretrained/MSRA/R-50.pkl"
   BACKBONE:
     NAME: "build_resnet_backbone"
   RESNETS:
