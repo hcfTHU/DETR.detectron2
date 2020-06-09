@@ -5,7 +5,6 @@ MODEL:
     NAME: "build_resnet_backbone"
   RESNETS:
     DEPTH: 50
-    # STRIDE_IN_1X1: False
     OUT_FEATURES: ["res5"]
   DETR:
     TRANSFORMER:
