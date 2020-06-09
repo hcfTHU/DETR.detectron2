@@ -1,59 +1,27 @@
-# DETR implementation based on Detectron2.
-For more detailes, please find DETR at projects/DETR: https://github.com/poodarchu/DETR.detectron2/blob/master/projects/DETR/RAEDME.md
+# DETR based on Detectron2
 
-<img src=".github/Detectron2-Logo-Horz.svg" width="300" >
+## Instructions
+1. Follow detectron2's readme to install detection2
+  * ```cd DETR.detectron2```
+  * ```python setup.py build develop```
+  * link dataset path to DETR.detectron2/datasets/
+2. Run DETR
+  * ```python projects/DETR/train_net.py --num-gpus 8 --config-file projects/DETR/configs/detr.res50.coco.multiscale.150e.yaml```
 
-Detectron2 is Facebook AI Research's next generation software system
-that implements state-of-the-art object detection algorithms.
-It is a ground-up rewrite of the previous version,
-[Detectron](https://github.com/facebookresearch/Detectron/),
-and it originates from [maskrcnn-benchmark](https://github.com/facebookresearch/maskrcnn-benchmark/).
+## Results
 
-<div align="center">
-  <img src="https://user-images.githubusercontent.com/1381301/66535560-d3422200-eace-11e9-9123-5535d469db19.png"/>
-</div>
+| config                               | COCO AP         | Paper        |
+| ------------------------------------ | --------------- | ------------ |
+| detr.res50.coco.multiscale.150e.yaml | 38.8 without RC | 39.5 with RC |
 
-### What's New
-* It is powered by the [PyTorch](https://pytorch.org) deep learning framework.
-* Includes more features such as panoptic segmentation, densepose, Cascade R-CNN, rotated bounding boxes, etc.
-* Can be used as a library to support [different projects](projects/) on top of it.
-  We'll open source more research projects in this way.
-* It [trains much faster](https://detectron2.readthedocs.io/notes/benchmarks.html).
-
-See our [blog post](https://ai.facebook.com/blog/-detectron2-a-pytorch-based-modular-object-detection-library-/)
-to see more demos and learn about detectron2.
-
-## Installation
-
-See [INSTALL.md](INSTALL.md).
-
-## Quick Start
-
-See [GETTING_STARTED.md](GETTING_STARTED.md),
-or the [Colab Notebook](https://colab.research.google.com/drive/16jcaJoc6bCFAQ96jDe2HwtXj7BMD_-m5).
-
-Learn more at our [documentation](https://detectron2.readthedocs.org).
-And see [projects/](projects/) for some projects that are built on top of detectron2.
-
-## Model Zoo and Baselines
-
-We provide a large set of baseline results and trained models available for download in the [Detectron2 Model Zoo](MODEL_ZOO.md).
+"**RC**" means RandomCrop, it brings about 1% AP improvements accroding to paper.
 
 
-## License
+## Disclaimer
+* I haven't add RandomCrop.
+* I haven't add support for segmentaion, but it can be easily added. 
 
-Detectron2 is released under the [Apache 2.0 license](LICENSE).
-
-## Citing Detectron2
-
-If you use Detectron2 in your research or wish to refer to the baseline results published in the [Model Zoo](MODEL_ZOO.md), please use the following BibTeX entry.
-
-```BibTeX
-@misc{wu2019detectron2,
-  author =       {Yuxin Wu and Alexander Kirillov and Francisco Massa and
-                  Wan-Yen Lo and Ross Girshick},
-  title =        {Detectron2},
-  howpublished = {\url{https://github.com/facebookresearch/detectron2}},
-  year =         {2019}
-}
-```
+## Advantage
+* Training faster
+* Avoid memory leaking in official implementation
+* Use backbone in detectron2
