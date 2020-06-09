@@ -66,7 +66,7 @@ class DETR(nn.Module):
 
         if self.aux_loss:
             self.aux_weight_dict = {}
-            for i in range(cfg.MODEL.TRANSFORMER.NUM_DEC_LAYERS - 1):
+            for i in range(cfg.MODEL.DETR.TRANSFORMER.NUM_DEC_LAYERS - 1):
                 self.aux_weight_dict.update({k + f"_{i}": v for k, v in self.weight_dict.items()})
             self.weight_dict.update(self.aux_weight_dict)
 
