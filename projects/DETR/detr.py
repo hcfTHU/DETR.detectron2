@@ -124,7 +124,11 @@ class DETR(nn.Module):
                 loss_dict[k] = v * self.weight_dict[k] if k in self.weight_dict else v
             return loss_dict
         else:
-            res = self.post_processing(out, targets)
+            
+            target_sizes = torch.stack([
+                torch.tensor([bi["height"], bi["width"]], device=self.device) for bi in batched_inputs
+            ])
+            res = self.post_processors['bbox'](out, target_sizes)
 
             processed_results = []
             for results_per_image, input_per_image, image_size in \
@@ -164,11 +168,6 @@ class DETR(nn.Module):
             targets.append(target)
 
         return targets
-
-    def post_processing(self, outputs, targets):
-        target_sizes = torch.stack([t["orig_size"] for t in targets], dim=0)
-        results = self.post_processors['bbox'](outputs, target_sizes)
-        return results
 
 
 class SetCriterion(nn.Module):
