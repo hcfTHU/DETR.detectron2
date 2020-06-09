@@ -266,7 +266,7 @@ class SimpleTrainer(TrainerBase):
             metrics_dict = {
                 k: np.mean([x[k] for x in all_metrics_dict]) for k in all_metrics_dict[0].keys()
             }
-            total_losses_reduced = sum(loss for loss in metrics_dict.values())
+            total_losses_reduced = sum(loss for key, loss in metrics_dict.items() if "loss" in key)
 
             self.storage.put_scalar("total_loss", total_losses_reduced)
             if len(metrics_dict) > 1:
