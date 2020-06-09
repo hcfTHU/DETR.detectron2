@@ -35,12 +35,12 @@ DATASETS:
   TEST: ("coco_2017_val",)
 SOLVER:
   OPTIMIZER_NAME: "AdamW"
-  IMS_PER_BATCH: 32  # 8 GPUs
+  IMS_PER_BATCH: 16  # 8 GPUs
   BASE_LR: 0.0001  # Note that RetinaNet uses a different default learning rate
   BASE_LR_BACKBONE: 0.00001
-  STEPS: (366500,) # 
+  STEPS: (733000,)  # 100 epoch using batch size 16 
   WARMUP_ITERS: 0
-  MAX_ITER: 549750  # 150 epoch using batch size 32
+  MAX_ITER: 1099500  # 150 epoch using batch size 16
   CLIP_GRADIENTS:
     ENABLED: True
     CLIP_TYPE: "norm"
