@@ -5,14 +5,16 @@
   * ```cd DETR.detectron2```
   * ```python setup.py build develop```
   * link dataset path to DETR.detectron2/datasets/
-2. Run DETR
+2. Train DETR
   * ```python projects/DETR/train_net.py --num-gpus 8 --config-file projects/DETR/configs/detr.res50.coco.multiscale.150e.yaml```
+3. Evaluate DETR using provided weights [here](https://drive.google.com/drive/folders/1QxTslMLapXcgsIu36jFJyceY04J9Hk-e?usp=sharing)
+  * ```python projects/DETR/train_net.py --num-gpus 8 --config-file projects/DETR/configs/detr.res50.coco.multiscale.150e.custom.yaml --eval-only MODEL.WEIGHTS path/to/provided/ckpt.pth```
 
 ## Results
 
-| config                               | COCO AP         | Paper        |
-| ------------------------------------ | --------------- | ------------ |
-| detr.res50.coco.multiscale.150e.yaml | 38.8 without RC | 39.5 with RC |
+| config                               | COCO AP         | Paper        | Checkpoint |
+| ------------------------------------ | --------------- | ------------ | ---------- |
+| detr.res50.coco.multiscale.150e.yaml | 38.5 without RC | 39.5 with RC | [LINK](https://drive.google.com/drive/folders/1QxTslMLapXcgsIu36jFJyceY04J9Hk-e?usp=sharing)
 
 "**RC**" means RandomCrop, it brings about 1% AP improvements accroding to paper.
 

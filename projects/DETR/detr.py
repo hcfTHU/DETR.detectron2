@@ -33,7 +33,7 @@ class DETR(nn.Module):
         self.device = torch.device(cfg.MODEL.DEVICE)
 
         # Build Backbone
-        self.backbone = build_backbone(cfg)      
+        self.backbone = build_backbone(cfg)
         # Build Transformer
         self.transformer = Transformer(cfg)
 
@@ -88,7 +88,13 @@ class DETR(nn.Module):
 
         pixel_mean = torch.Tensor(cfg.MODEL.PIXEL_MEAN).to(self.device).view(3, 1, 1)
         pixel_std = torch.Tensor(cfg.MODEL.PIXEL_STD).to(self.device).view(3, 1, 1)
-        self.normalizer = lambda x: (x - pixel_mean) / pixel_std
+
+        if not cfg.MODEL.RESNETS.STRIDE_IN_1X1:
+            # Custom or torch pretrain weights
+            self.normalizer = lambda x: (x / 255.0 - pixel_mean) / pixel_std
+        else:
+            # MSRA pretrain weights
+            self.normalizer = lambda x: (x - pixel_mean) / pixel_std
 
         self.to(self.device)
 
@@ -113,7 +119,7 @@ class DETR(nn.Module):
         out = {'pred_logits': outputs_class[-1], 'pred_boxes': outputs_coord[-1]}
 
         if self.training:
-            
+
             targets = self.convert_anno_format(batched_inputs)
 
             if self.aux_loss:
@@ -124,7 +130,7 @@ class DETR(nn.Module):
                 loss_dict[k] = v * self.weight_dict[k] if k in self.weight_dict else v
             return loss_dict
         else:
-            
+
             target_sizes = torch.stack([
                 torch.tensor([bi["height"], bi["width"]], device=self.device) for bi in batched_inputs
             ])

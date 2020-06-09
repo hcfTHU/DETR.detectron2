@@ -1,11 +1,13 @@
 MODEL:
   META_ARCHITECTURE: "DETR"
-  WEIGHTS: "detectron2://ImageNetPretrained/MSRA/R-50.pkl"
+  WEIGHTS: "custom_resnet_50.pkl"
+  PIXEL_MEAN: [0.406, 0.456, 0.485]  # BGR
+  PIXEL_STD: [0.225, 0.224, 0.229]
   BACKBONE:
     NAME: "build_resnet_backbone"
   RESNETS:
     DEPTH: 50
-    # STRIDE_IN_1X1: False
+    STRIDE_IN_1X1: False  # For custom or torchvision pretrain weights
     OUT_FEATURES: ["res5"]
   DETR:
     TRANSFORMER:
