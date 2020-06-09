@@ -37,6 +37,7 @@ SOLVER:
   BASE_LR: 0.0001  # Note that RetinaNet uses a different default learning rate
   BASE_LR_BACKBONE: 0.00001
   STEPS: (366500,) # 
+  WARMUP_ITERS: 0
   MAX_ITER: 549750  # 150 epoch using batch size 32
   CLIP_GRADIENTS:
     ENABLED: True
