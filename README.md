@@ -9,6 +9,9 @@
   * ```python projects/DETR/train_net.py --num-gpus 8 --config-file projects/DETR/configs/detr.res50.coco.multiscale.150e.yaml```: use MSRA pretrain weights
 3. Evaluate DETR using provided weights [here](https://drive.google.com/drive/folders/1QxTslMLapXcgsIu36jFJyceY04J9Hk-e?usp=sharing)
   * ```python projects/DETR/train_net.py --num-gpus 8 --config-file projects/DETR/configs/detr.res50.coco.multiscale.150e.yaml --eval-only MODEL.WEIGHTS path/to/provided/ckpt.pth```
+4. For faster training:
+  * ```python projects/DETR/train_net.py --num-gpus 8 --config-file projects/DETR/configs/detr.res50.coco.multiscale.150e.bs48.yaml```
+  Using a 8x2080ti server, 150 epochs take about 3 day 6 hours.
 
 ## Results
 
