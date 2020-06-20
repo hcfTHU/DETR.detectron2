@@ -9,10 +9,9 @@ from setuptools import find_packages, setup
 from typing import List
 import torch
 from torch.utils.cpp_extension import CUDA_HOME, CppExtension, CUDAExtension
-from torch.utils.hipify import hipify_python
 
 torch_ver = [int(x) for x in torch.__version__.split(".")[:2]]
-assert torch_ver >= [1, 4], "Requires PyTorch >= 1.4"
+assert torch_ver >= [1, 3], "Requires PyTorch >= 1.3"
 
 
 def get_version():
@@ -53,38 +52,9 @@ def get_extensions():
             True if ((torch.version.hip is not None) and (ROCM_HOME is not None)) else False
         )
 
-    if is_rocm_pytorch:
-        hipify_python.hipify(
-            project_directory=this_dir,
-            output_directory=this_dir,
-            includes="/detectron2/layers/csrc/*",
-            show_detailed=True,
-            is_pytorch_extension=True,
-        )
-
-        # Current version of hipify function in pytorch creates an intermediate directory
-        # named "hip" at the same level of the path hierarchy if a "cuda" directory exists,
-        # or modifying the hierarchy, if it doesn't. Once pytorch supports
-        # "same directory" hipification (PR pendeing), the source_cuda will be set
-        # similarly in both cuda and hip paths, and the explicit header file copy
-        # (below) will not be needed.
-        source_cuda = glob.glob(path.join(extensions_dir, "**", "hip", "*.hip")) + glob.glob(
-            path.join(extensions_dir, "hip", "*.hip")
-        )
-
-        shutil.copy(
-            "detectron2/layers/csrc/box_iou_rotated/box_iou_rotated_utils.h",
-            "detectron2/layers/csrc/box_iou_rotated/hip/box_iou_rotated_utils.h",
-        )
-        shutil.copy(
-            "detectron2/layers/csrc/deformable/deform_conv.h",
-            "detectron2/layers/csrc/deformable/hip/deform_conv.h",
-        )
-
-    else:
-        source_cuda = glob.glob(path.join(extensions_dir, "**", "*.cu")) + glob.glob(
-            path.join(extensions_dir, "*.cu")
-        )
+    source_cuda = glob.glob(path.join(extensions_dir, "**", "*.cu")) + glob.glob(
+        path.join(extensions_dir, "*.cu")
+    )
 
     sources = [main_source] + sources
 
