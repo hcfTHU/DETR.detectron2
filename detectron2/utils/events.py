@@ -224,21 +224,18 @@ class CommonMetricPrinter(EventWriter):
             ]
         )
         self.logger.info(
-            ("eta: {eta}  iter: {iter}/{max_iter}  {losses}  {other_metrics}  "
+            ("eta: {eta}  iter: {iter}/{max_iter}  {losses}  {other_metrics}  {time}  "
              "{data_time}  lr: {lr}  {memory}").format(
-                eta=eta_string,
-                iter=iteration + 1,
-                max_iter=self._max_iter,
-                losses=losses,
-                other_metrics=other_metrics,
-                data_time="data_time: {:.4f}".format(data_time)
-                if data_time is not None
-                else "",
-                lr=lr,
-                memory="max_mem: {:.0f}M".format(max_mem_mb)
-                if max_mem_mb is not None
-                else "",
-            )
+                 eta=eta_string,
+                 iter=iteration + 1,
+                 max_iter=self._max_iter,
+                 losses=losses,
+                 other_metrics=other_metrics,
+                 time="time: {:.4f}".format(iter_time),
+                 data_time="data_time: {:.4f}".format(data_time) if data_time is not None else "",
+                 lr=lr,
+                 memory="max_mem: {:.0f}M".format(max_mem_mb) if max_mem_mb is not None else "",
+             )
         )
 
 
